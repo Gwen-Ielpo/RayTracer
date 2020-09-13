@@ -39,6 +39,18 @@ public:
         return *this;
     }
 
+    void addX(double size){
+        e[0] += size;
+    }
+
+    void addY(double size){
+        e[1] += size;
+    }
+
+    void addZ(double size){
+        e[2] += size;
+    }
+
     vec3& operator/=(const double t) {
         return *this *= 1/t;
     }

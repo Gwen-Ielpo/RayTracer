@@ -5,6 +5,9 @@
 #include "sphere.h"
 #include "camera.h"
 #include "material.h"
+#include "pyramid.h"
+#include "rectangle.h"
+#include "block.h"
 
 #include <iostream>
 #include <fstream>
@@ -79,8 +82,10 @@ int main() {
 
 
 
+
+
     // Image
-    const auto aspect_ratio = 3.0 / 2.0;
+    /*const auto aspect_ratio = 3.0 / 2.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples_per_pixel = 100;
@@ -99,11 +104,39 @@ int main() {
     world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
     world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0), -0.45, material_left));
     world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
+     */
 
-    point3 lookfrom(13,2,3);
-    point3 lookat(0,0,0);
+
+    const auto aspect_ratio = 16.0 / 9.0;
+    const int image_width = 400;
+    const int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int samples_per_pixel = 300;
+    const int max_depth = 50;
+
+    hittable_list world;
+
+    auto red   = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto light = make_shared<diffuse_light>(color(15, 15, 15));
+
+    auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+    auto material_center = make_shared<lambertian>(color(0.7, 0.3, 0.3));
+    auto material_left   = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+    auto material_right  = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+    auto material_far_right  = make_shared<metal>(color(0.5, 0.6, 0.4), 0.0);
+
+    world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+    //world.add(make_shared<xy_rect>(point3( 0.0,    0.0, -1.0),   0.5, material_center));
+    world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
+    world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
+    world.add(make_shared<block>(point3(-0.25, -1.0, 0.0), point3(0.25, 1.0, 1), material_center));
+    world.add(make_shared<block>(point3(2.25, -1.0, -2.0), point3(3.25,    1.0, 0.0), material_far_right));
+
+    point3 lookfrom(3,3,10);
+    point3 lookat(0,0,-1);
     vec3 vup(0,1,0);
-    auto dist_to_focus = 10.0;
+    auto dist_to_focus = 10;
     auto aperture = 0.1;
 
     camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);

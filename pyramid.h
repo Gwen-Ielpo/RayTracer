@@ -12,20 +12,24 @@
 class pyramid : public hittable {
 public:
     pyramid() {}
-    pyramid(point3 cen, double r, shared_ptr<material> m)
-            : center(cen), radius(r), mat_ptr(m) {};
+    pyramid(point3 cen, double r, double size, shared_ptr<material> m)
+            : center(cen), radius(r), size(size), mat_ptr(m) {};
 
     virtual bool hit(
             const ray& r, double tmin, double tmax, hit_record& rec) const override;
 
 public:
     point3 center;
+    point3 f,g,h,i,j;
+    double size;
     double radius;
     shared_ptr<material> mat_ptr;
 };
 
 inline bool pyramid::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     vec3 oc = r.origin() - center;
+    //f = point3( 0.0,    0.0, -1.0);
+
     auto a = r.direction().length_squared();
     auto half_b = dot(oc, r.direction());
     auto c = oc.length_squared() - radius*radius;
